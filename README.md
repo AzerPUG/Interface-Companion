@@ -21,6 +21,12 @@ Please note that our Discord Verification level prevents new people from talking
 <br />
 <br />
 <br />
+# Custom AddOn
+Are you looking for a custom AddOn? Did you use an AddOn that is no longer being developed? Do you want an existing AddOn to change?<br />
+You can comission us to do some programming for you through Fiverr here: https://www.fiverr.com/arcodielhof
+<br />
+<br />
+<br />
 # Preferred Download Method
 If you care for any of our AddOns, please consider downloading them through either of the following two methods.<br />
 These two download methods are the only ones that actually support the authors that created them and their hard work!
