@@ -9,7 +9,7 @@ AZP.InterfaceCompanion = {}
 
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
 
-function InterfaceCompanion:OnLoad()
+function AZP.OnLoad:InterfaceCompanion()
     InterfaceCompanionFrame:SetSize(500, 500)
     InterfaceCompanionFrame:SetPoint("CENTER", -400, -100)
     InterfaceCompanionFrame:Show()
@@ -32,15 +32,10 @@ function InterfaceCompanion:OnLoad()
     CompanionModel:RegisterForDrag("LeftButton")
     CompanionModel:SetScript("OnDragStart", CompanionModel.StartMoving)
     CompanionModel:SetScript("OnDragStop", CompanionModel.StopMovingOrSizing)
-    
     CompanionModel:Show()
-    
-    InterfaceCompanionFrame:SetScript("OnEvent", function(...) InterfaceCompanion:OnEvent(...) end)
-    InterfaceCompanionFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-	--:RegisterEvent("CINEMATIC_STOP")
-	--:RegisterEvent("SCREENSHOT_SUCCEEDED")
 
-    --InterfaceCompanion:LoadModel()
+    InterfaceCompanionFrame:SetScript("OnEvent", function(...) AZP.OnEvent:InterfaceCompanion(...) end)
+    InterfaceCompanionFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function InterfaceCompanion:LoadModel()
@@ -66,7 +61,7 @@ function InterfaceCompanion:LoadModel()
     --CompanionModel:SetModel("World/expansion05/doodads/ORC/DOODADS/6hu_garrison_orangebird.mdx") -- test both .mdx and .m2
 end
 
-function InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
+function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
 	local frame = CreateFrame("Frame")
 	frame.start_time = GetServerTime()
 	frame:SetScript("OnUpdate", 
@@ -81,7 +76,7 @@ function InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
 	frame:Show()
 end
 
-function InterfaceCompanion:OnEvent(self, event, ...)
+function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     print("PepeTest 1")
     if event == "PLAYER_ENTERING_WORLD" then
         print("PepeTest 2")
@@ -89,4 +84,4 @@ function InterfaceCompanion:OnEvent(self, event, ...)
     end
 end
 
-InterfaceCompanion:OnLoad()
+AZP.OnLoad:InterfaceCompanion()

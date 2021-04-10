@@ -1,9 +1,9 @@
 ## Interface: 90002
-## Title: |cFFFFFFFFInterface Companion|r
+## Title: |cFF00FFFFAzerPUG's|r |cFFFFFF00Interface Companion|r
 ## Author: Tex & AzerPUG Gaming Community (www.azerpug.com/discord)
 ## OptionalDeps: AzerPUG's Core
 ## Notes: Let's be friends! I want to be with you while you play :D
-## Version: SL 9.0.2 (For actual addon version, check main.lua)
+## Version: SL 9.0.2 (For actual addon version, check InterfaceCompanion.lua)
 ## SavedVariables: IntCompData
 
 InterfaceCompanion.lua
