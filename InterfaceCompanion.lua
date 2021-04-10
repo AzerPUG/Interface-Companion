@@ -1,4 +1,12 @@
-local InterfaceCompanion = {}
+if AZP == nil then AZP = {} end
+if AZP.VersionControl == nil then AZP.VersionControl = {} end
+if AZP.OnLoad == nil then AZP.OnLoad = {} end
+if AZP.OnEvent == nil then AZP.OnEvent = {} end
+if AZP.OnEvent == nil then AZP.OnEvent = {} end
+
+AZP.VersionControl.InterfaceCompanion = 18
+AZP.InterfaceCompanion = {}
+
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
 
 function InterfaceCompanion:OnLoad()
