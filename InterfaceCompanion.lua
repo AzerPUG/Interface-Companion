@@ -118,7 +118,6 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
     frameToFill.ShowHideButton = CreateFrame("Button", nil, frameToFill, "UIPanelButtonTemplate")
     frameToFill.ShowHideButton:SetSize(100, 25)
     frameToFill.ShowHideButton:SetPoint("TOP", 60, -100)
-    frameToFill.ShowHideButton:SetText("Hide Companion!")
     frameToFill.ShowHideButton:SetScript("OnClick", function ()
         if InterfaceCompanionFrame:IsShown() then
             InterfaceCompanionFrame:Hide()
