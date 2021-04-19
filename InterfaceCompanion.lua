@@ -4,18 +4,20 @@ if AZP.OnLoad == nil then AZP.OnLoad = {} end
 if AZP.OnEvent == nil then AZP.OnEvent = {} end
 if AZP.OnEvent == nil then AZP.OnEvent = {} end
 
-AZP.VersionControl.InterfaceCompanion = 18
+AZP.VersionControl.InterfaceCompanion = 1
 AZP.InterfaceCompanion = {}
 
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
 local CompanionModel = nil
+local EventFrame, UpdateFrame = {}, {}
 
 local AZPICSelfOptionPanel = nil
+local optionHeader = "|cFF00FFFFInterface Companion|r"
 
 if AZPICCompanionFrameLocation == nil then AZPICCompanionFrameLocation = {"CENTER", 0, 0} end
 if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false} end
 
-function AZP.OnLoad:InterfaceCompanion()
+function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:SetSize(250, 250)
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
@@ -32,13 +34,51 @@ function AZP.OnLoad:InterfaceCompanion()
     CompanionModel.texture:Hide()
     CompanionModel.texture:SetAllPoints()
     CompanionModel:Show()
+end
 
-    InterfaceCompanionFrame:SetScript("OnEvent", function(...) AZP.InterfaceCompanion:OnEvent(...) end)
-    InterfaceCompanionFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-    InterfaceCompanionFrame:RegisterEvent("VARIABLES_LOADED")
+function AZP.InterfaceCompanion:OnLoadCore()
+    AZP.OptionsPanels:Generic("Interface Companion", optionHeader, function (frame)
+        AZP.InterfaceCompanion:FillOptionsPanel(frame)
+    end)
+end
+
+function AZP.InterfaceCompanion:OnLoadSelf()
+    C_ChatInfo.RegisterAddonMessagePrefix("AZPVERSIONS")
+
+    EventFrame = CreateFrame("FRAME", nil)
+    EventFrame:RegisterEvent("CHAT_MSG_ADDON")
+    EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    EventFrame:RegisterEvent("VARIABLES_LOADED")
+    EventFrame:SetScript("OnEvent", function(...) AZP.InterfaceCompanion:OnEvent(...) end)
+
+    UpdateFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+    UpdateFrame:SetPoint("CENTER", 0, 250)
+    UpdateFrame:SetSize(400, 200)
+    UpdateFrame:SetBackdrop({
+        bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+        edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 },
+    })
+    UpdateFrame:SetBackdropColor(0.25, 0.25, 0.25, 0.80)
+    UpdateFrame.header = UpdateFrame:CreateFontString("UpdateFrame", "ARTWORK", "GameFontNormalHuge")
+    UpdateFrame.header:SetPoint("TOP", 0, -10)
+    UpdateFrame.header:SetText("|cFFFF0000AzerPUG's Interface Companion is out of date!|r")
+
+    UpdateFrame.text = UpdateFrame:CreateFontString("UpdateFrame", "ARTWORK", "GameFontNormalLarge")
+    UpdateFrame.text:SetPoint("TOP", 0, -40)
+    UpdateFrame.text:SetText("Error!")
+
+    UpdateFrame:Hide()
+
+    local UpdateFrameCloseButton = CreateFrame("Button", nil, UpdateFrame, "UIPanelCloseButton")
+    UpdateFrameCloseButton:SetWidth(25)
+    UpdateFrameCloseButton:SetHeight(25)
+    UpdateFrameCloseButton:SetPoint("TOPRIGHT", UpdateFrame, "TOPRIGHT", 2, 2)
+    UpdateFrameCloseButton:SetScript("OnClick", function() UpdateFrame:Hide() end )
 
     AZPICSelfOptionPanel = CreateFrame("FRAME", nil)
-    AZPICSelfOptionPanel.name = "|cFF00FFFFInterface Companion|r"
+    AZPICSelfOptionPanel.name = optionHeader
     InterfaceOptions_AddCategory(AZPICSelfOptionPanel)
     AZPICSelfOptionPanel.header = AZPICSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
     AZPICSelfOptionPanel.header:SetPoint("TOP", 0, -10)
@@ -53,6 +93,8 @@ function AZP.OnLoad:InterfaceCompanion()
         "Twitch: www.twitch.tv/azerpug\n|r"
     )
     AZP.InterfaceCompanion:FillOptionsPanel(AZPICSelfOptionPanel)
+    AZP.InterfaceCompanion:OnLoadBoth()
+    AZP.InterfaceCompanion:ShareVersion()
 end
 
 function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
@@ -146,8 +188,57 @@ function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
 	frame:Show()
 end
 
+function AZP.InterfaceCompanion:ShareVersion()    -- Change DelayedExecution to native WoW Function.
+    local versionString = string.format("|TT:%d|", AZP.VersionControl.ToolTips)
+    AZP.InterfaceCompanion:DelayedExecution(10, function() 
+        if IsInGroup() then
+            if IsInRaid() then
+                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"RAID", 1)
+            else
+                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"PARTY", 1)
+            end
+        end
+        if IsInGuild() then
+            C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"GUILD", 1)
+        end
+    end)
+end
+
+function AZP.InterfaceCompanion:ReceiveVersion(version)
+    if version > AZP.VersionControl.InterfaceCompanion then
+        if (not HaveShowedUpdateNotification) then
+            HaveShowedUpdateNotification = true
+            UpdateFrame:Show()
+            UpdateFrame.text:SetText(
+                "Please download the new version through the CurseForge app.\n" ..
+                "Or use the CurseForge website to download it manually!\n\n" .. 
+                "Newer Version: v" .. version .. "\n" .. 
+                "Your version: v" .. AZP.VersionControl.InterfaceCompanion
+            )
+        end
+    end
+end
+
+function AZP.InterfaceCompanion:GetSpecificAddonVersion(versionString, addonWanted)
+    local pattern = "|([A-Z]+):([0-9]+)|"
+    local index = 1
+    while index < #versionString do
+        local _, endPos = string.find(versionString, pattern, index)
+        local addon, version = string.match(versionString, pattern, index)
+        index = endPos + 1
+        if addon == addonWanted then
+            return tonumber(version)
+        end
+    end
+end
+
 function AZP.InterfaceCompanion:OnEvent(self, event, ...)
-    if event == "PLAYER_ENTERING_WORLD" then
+    if event == "CHAT_MSG_ADDON" then
+        local prefix, payload, _, sender = ...
+        if prefix == "AZPVERSIONS" then
+            AZP.InterfaceCompanion:ReceiveVersion(AZP.InterfaceCompanion:GetSpecificAddonVersion(payload, "TT"))
+        end
+    elseif event == "PLAYER_ENTERING_WORLD" then
         AZP.InterfaceCompanion:LoadModel()
     elseif event == "VARIABLES_LOADED" then
         AZP.InterfaceCompanion:LoadLocation()
@@ -155,4 +246,6 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     end
 end
 
-AZP.OnLoad:InterfaceCompanion()
+if not IsAddOnLoaded("AzerPUG's Core") then
+    AZP.InterfaceCompanion:OnLoadSelf()
+end
