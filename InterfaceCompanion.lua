@@ -236,7 +236,10 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     if event == "CHAT_MSG_ADDON" then
         local prefix, payload, _, sender = ...
         if prefix == "AZPVERSIONS" then
-            AZP.InterfaceCompanion:ReceiveVersion(AZP.InterfaceCompanion:GetSpecificAddonVersion(payload, "TT"))
+            local version = AZP.InterfaceCompanion:GetSpecificAddonVersion(payload, "IC")
+            if version ~= nil then
+                AZP.InterfaceCompanion:ReceiveVersion(version)
+            end
         end
     elseif event == "PLAYER_ENTERING_WORLD" then
         AZP.InterfaceCompanion:LoadModel()
