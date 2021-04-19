@@ -101,7 +101,6 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
     frameToFill.LockMoveButton = CreateFrame("Button", nil, frameToFill, "UIPanelButtonTemplate")
     frameToFill.LockMoveButton:SetSize(100, 25)
     frameToFill.LockMoveButton:SetPoint("TOP", -60, -100)
-    frameToFill.LockMoveButton:SetText("Lock Companion")
     frameToFill.LockMoveButton:SetScript("OnClick", function ()
         if InterfaceCompanionFrame:IsMovable() then
             InterfaceCompanionFrame:EnableMouse(false)
