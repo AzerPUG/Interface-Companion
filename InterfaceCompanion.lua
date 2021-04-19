@@ -15,7 +15,7 @@ local AZPICSelfOptionPanel = nil
 local optionHeader = "|cFF00FFFFInterface Companion|r"
 
 if AZPICCompanionFrameLocation == nil then AZPICCompanionFrameLocation = {"CENTER", 0, 0} end
-if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false} end
+if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false} end
 
 function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:SetSize(250, 250)
@@ -49,6 +49,7 @@ function AZP.InterfaceCompanion:OnLoadSelf()
     EventFrame:RegisterEvent("CHAT_MSG_ADDON")
     EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
     EventFrame:RegisterEvent("VARIABLES_LOADED")
+    EventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
     EventFrame:SetScript("OnEvent", function(...) AZP.InterfaceCompanion:OnEvent(...) end)
 
     UpdateFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
@@ -118,19 +119,36 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
     frameToFill.ShowHideButton = CreateFrame("Button", nil, frameToFill, "UIPanelButtonTemplate")
     frameToFill.ShowHideButton:SetSize(100, 25)
     frameToFill.ShowHideButton:SetPoint("TOP", 60, -100)
-    frameToFill.ShowHideButton:SetScript("OnClick", function ()
-        if InterfaceCompanionFrame:IsShown() then
-            InterfaceCompanionFrame:Hide()
-            frameToFill.ShowHideButton:SetText("Show Companion!")
-            AZPICLockedAndHidden[2] = true
+    frameToFill.ShowHideButton:SetScript("OnClick", function() AZP.InterfaceCompanion:ShowHideFrame() end)
+
+    frameToFill.AutoHideGroup = CreateFrame("Button", nil, frameToFill, "UIPanelButtonTemplate")
+    frameToFill.AutoHideGroup:SetSize(100, 25)
+    frameToFill.AutoHideGroup:SetPoint("TOP", 60, -150)
+    frameToFill.AutoHideGroup:SetText("AutoHide On")
+    frameToFill.AutoHideGroup:SetScript("OnClick",
+    function()
+        if AZPICLockedAndHidden[3] then
+            AZPICLockedAndHidden[3] = false
+            frameToFill.AutoHideGroup:SetText("AutoHide On")
         else
-            InterfaceCompanionFrame:Show()
-            frameToFill.ShowHideButton:SetText("Hide Companion!")
-            AZPICLockedAndHidden[2] = false
+            AZPICLockedAndHidden[3] = true
+            frameToFill.AutoHideGroup:SetText("AutoHide Off")
         end
     end)
 
     frameToFill:Hide()
+end
+
+function AZP.InterfaceCompanion:ShowHideFrame()
+    if InterfaceCompanionFrame:IsShown() then
+        InterfaceCompanionFrame:Hide()
+        frameToFill.ShowHideButton:SetText("Show Companion!")
+        AZPICLockedAndHidden[2] = true
+    else
+        InterfaceCompanionFrame:Show()
+        frameToFill.ShowHideButton:SetText("Hide Companion!")
+        AZPICLockedAndHidden[2] = false
+    end
 end
 
 function AZP.InterfaceCompanion:SaveLocation()
@@ -160,6 +178,11 @@ function AZP.InterfaceCompanion:LoadVariables()
     else
         InterfaceCompanionFrame:Show()
         AZPICSelfOptionPanel.ShowHideButton:SetText("Hide Companion!")
+    end
+
+    if IsInGroup() and AZPICLockedAndHidden[3] == true then
+        InterfaceCompanionFrame:Hide()
+        AZPICSelfOptionPanel.ShowHideButton:SetText("Show Companion!")
     end
 end
 
@@ -244,6 +267,18 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     elseif event == "VARIABLES_LOADED" then
         AZP.InterfaceCompanion:LoadLocation()
         AZP.InterfaceCompanion:LoadVariables()
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        if AZPICLockedAndHidden[3] then
+            if IsInGroup() then
+                InterfaceCompanionFrame:Hide()
+                AZPICSelfOptionPanel.ShowHideButton:SetText("Show Companion!")
+                AZPICLockedAndHidden[2] = true
+            else
+                InterfaceCompanionFrame:Show()
+                AZPICSelfOptionPanel.ShowHideButton:SetText("Hide Companion!")
+                AZPICLockedAndHidden[2] = false
+            end
+        end
     end
 end
 
