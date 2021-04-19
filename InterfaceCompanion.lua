@@ -26,8 +26,6 @@ function AZP.OnLoad:InterfaceCompanion()
     CompanionModel:SetSize(200, 200)
     CompanionModel:SetPosition(-0.25, 0, 0)
     CompanionModel:SetPoint("CENTER", 0, 0)
-    --CompanionModel:SetCustomCamera(1)
-    --CompanionModel:SetCameraPosition(0, 0, 0.5)
     CompanionModel.x, CompanionModel.y, CompanionModel.z = 0, 0, 0
     CompanionModel.deltaX = 0
     CompanionModel.texture = CompanionModel:CreateTexture()
@@ -126,26 +124,11 @@ function AZP.InterfaceCompanion:LoadVariables()
 end
 
 function AZP.InterfaceCompanion:LoadModel()
-    --CompanionModel.texture:SetTexture("Character\\NightElf\\Female\\NightElfFemale.m2")
-    --CompanionModel:SetModel("Interface\\Buttons\\TalkToMeQuestionMark_new.m2") --THIS WORKS!!
     AZP.InterfaceCompanion:DelayedExecution(5,
         function()
-            --CompanionModel:SetModel("Interface\\Buttons\\TalkToMeQuestionMark_journey.m2")
-            --CompanionModel:SetModel("Interface\\Buttons\\TalkToMeQuestionMark_new.m2") --THIS WORKS!!
-            CompanionModel:SetCreature(86470) -- THIS WORKS == PEPE
-            --CompanionModel:SetCreature(88807) -- THIS WORKS == ARGI
-            --CompanionModel:SetItem(179339)
-            --CompanionModel:SetModel(161509)
+            CompanionModel:SetCreature(86470)
         end
     )
-    --CompanionModel:SetModel("Interface\\Buttons\\TalkToMeQuestionMark_journey.m2")
-    --CompanionModel:SetModel("World\\Expansion05\\doodads\\human\\doodads\\6hu_garrison_orangebird_var5.mdx")
-    --CompanionModel:SetModel([[Interface\Buttons\TalkToMeQuestionMark.m2]]) --THIS WORKS!!
-    --CompanionModel:SetModel([[World\Expansion05\doodads\human\doodads\6hu_garrison_orangebird.m2]])
-    --CompanionModel:SetModel([[Character\NightElf\Female\NightElfFemale.m2]])
-    --CompanionModel:SetModel("Character\\NightElf\\Female\\NightElfFemale.m2")
-    --CompanionModel:SetItem(128827) --THIS WORKS!!
-    --CompanionModel:SetModel("World/expansion05/doodads/ORC/DOODADS/6hu_garrison_orangebird.mdx") -- test both .mdx and .m2
 end
 
 function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
