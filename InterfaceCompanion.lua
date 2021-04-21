@@ -285,3 +285,11 @@ end
 if not IsAddOnLoaded("AzerPUG's Core") then
     AZP.InterfaceCompanion:OnLoadSelf()
 end
+
+AZP.SlashCommands["IC"] = function()
+    if InterfaceCompanionFrame ~= nil then InterfaceCompanionFrame:Show() end
+end
+
+AZP.SlashCommands["ic"] = AZP.SlashCommands["IC"]
+AZP.SlashCommands["companion"] = AZP.SlashCommands["IC"]
+AZP.SlashCommands["interface companion"] = AZP.SlashCommands["IC"]
