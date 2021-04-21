@@ -6,4 +6,5 @@
 ## Version: SL 9.0.2 (For actual addon version, check InterfaceCompanion.lua)
 ## SavedVariables: AZPICCompanionFrameLocation AZPICLockedAndHidden
 
+SlashCommands.lua
 InterfaceCompanion.lua
