@@ -299,7 +299,7 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     end
 end
 
-if not IsAddOnLoaded("AzerPUG's Core") then
+if not IsAddOnLoaded("AzerPUGsCore") then
     AZP.InterfaceCompanion:OnLoadSelf()
 end
 
