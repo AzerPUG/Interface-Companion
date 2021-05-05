@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 3
+AZP.VersionControl["Interface Companion"] = 4
 AZP.InterfaceCompanion = {}
 
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
