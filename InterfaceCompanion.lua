@@ -44,7 +44,7 @@ function AZP.InterfaceCompanion:OnLoadCore()
     AZP.Core:RegisterEvents("GROUP_ROSTER_UPDATE", function(...) AZP.InterfaceCompanion:eventGroupRosterUpdate(...) end)
 
     AZP.OptionsPanels:RemovePanel("Interface Companion")
-    AZP.OptionsPanels:Generic("Interface Companion", optionHeader, function (frame)
+    AZP.OptionsPanels:Generic("Interface Companion", optionHeader, function(frame)
         AZP.InterfaceCompanion:FillOptionsPanel(frame)
     end)
 end
@@ -218,16 +218,20 @@ end
 
 function AZP.InterfaceCompanion:ShareVersion()    -- Change DelayedExecution to native WoW Function.
     local versionString = string.format("|IC:%d|", AZP.VersionControl["Interface Companion"])
-    AZP.InterfaceCompanion:DelayedExecution(10, function() 
-        if IsInGroup() then
-            if IsInRaid() then
-                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"RAID", 1)
-            else
-                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"PARTY", 1)
+    AZP.InterfaceCompanion:DelayedExecution(10, function()
+        if UnitInBattleground("player") ~= nil then
+            -- BG stuff?
+        else
+            if IsInGroup() then
+                if IsInRaid() then
+                    C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"RAID", 1)
+                else
+                    C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"PARTY", 1)
+                end
             end
-        end
-        if IsInGuild() then
-            C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"GUILD", 1)
+            if IsInGuild() then
+                C_ChatInfo.SendAddonMessage("AZPVERSIONS", versionString ,"GUILD", 1)
+            end
         end
     end)
 end
