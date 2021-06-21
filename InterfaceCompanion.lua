@@ -2,7 +2,8 @@ if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
 AZP.VersionControl["Interface Companion"] = 5
-AZP.InterfaceCompanion = {}
+if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
+if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
 local CompanionModel = nil
@@ -40,8 +41,8 @@ function AZP.InterfaceCompanion:OnLoadCore()
     AZP.InterfaceCompanion:OnLoadBoth()
 
     AZP.Core:RegisterEvents("PLAYER_ENTERING_WORLD", function(...) AZP.InterfaceCompanion:LoadModel(...) end)
-    AZP.Core:RegisterEvents("VARIABLES_LOADED", function(...) AZP.InterfaceCompanion:eventVariablesLoaded(...) end)
-    AZP.Core:RegisterEvents("GROUP_ROSTER_UPDATE", function(...) AZP.InterfaceCompanion:eventGroupRosterUpdate(...) end)
+    AZP.Core:RegisterEvents("VARIABLES_LOADED", function(...) AZP.InterfaceCompanion.Events:VariablesLoaded(...) end)
+    AZP.Core:RegisterEvents("GROUP_ROSTER_UPDATE", function(...) AZP.InterfaceCompanion.Events:GroupRosterUpdate(...) end)
 
     AZP.OptionsPanels:RemovePanel("Interface Companion")
     AZP.OptionsPanels:Generic("Interface Companion", optionHeader, function(frame)
@@ -264,13 +265,13 @@ function AZP.InterfaceCompanion:GetSpecificAddonVersion(versionString, addonWant
     end
 end
 
-function AZP.InterfaceCompanion:eventVariablesLoaded()
+function AZP.InterfaceCompanion.Events:VariablesLoaded()
     AZP.InterfaceCompanion:LoadLocation()
     AZP.InterfaceCompanion:LoadVariables()
     AZP.InterfaceCompanion:ShareVersion()
 end
 
-function AZP.InterfaceCompanion:eventGroupRosterUpdate()
+function AZP.InterfaceCompanion.Events:GroupRosterUpdate()
     if AZPICLockedAndHidden[3] then
         if IsInGroup() then
             InterfaceCompanionFrame:Hide()
@@ -296,9 +297,9 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
     elseif event == "PLAYER_ENTERING_WORLD" then
         AZP.InterfaceCompanion:LoadModel()
     elseif event == "VARIABLES_LOADED" then
-        AZP.InterfaceCompanion:eventVariablesLoaded()
+        AZP.InterfaceCompanion.Events:VariablesLoaded()
     elseif event == "GROUP_ROSTER_UPDATE" then
-        AZP.InterfaceCompanion:eventGroupRosterUpdate()
+        AZP.InterfaceCompanion.Events:GroupRosterUpdate()
         AZP.InterfaceCompanion:ShareVersion()
     end
 end

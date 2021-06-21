@@ -1,5 +1,5 @@
 if AZP == nil then AZP = {} end
-if AZP.SlashCommands == nil then 
+if AZP.SlashCommands == nil then
     AZP.SlashCommands = {}
     SLASH_AZP1 = '/azp'
     SlashCmdList['AZP'] = function(arg)
