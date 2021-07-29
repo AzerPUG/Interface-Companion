@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 7
+AZP.VersionControl["Interface Companion"] = 8
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
@@ -17,24 +17,23 @@ local HaveShowedUpdateNotification = false
 
 if AZPICCompanionFrameLocation == nil then AZPICCompanionFrameLocation = {"CENTER", 0, 0} end
 if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false} end
+if AZPICModelIndex == nil then AZPICModelIndex = 1041861 end
 
 function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:SetSize(250, 250)
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
+    InterfaceCompanionFrame:SetScale(1)
 
     CompanionModel = CreateFrame("PlayerModel", nil, InterfaceCompanionFrame)
     CompanionModel:Hide()
     CompanionModel:SetSize(200, 200)
-    CompanionModel:SetPosition(-0.25, 0, 0)
+    CompanionModel:SetPosition(-2, 0, 0)
     CompanionModel:SetPoint("CENTER", 0, 0)
     CompanionModel.x, CompanionModel.y, CompanionModel.z = 0, 0, 0
-    CompanionModel.deltaX = 0
-    CompanionModel.texture = CompanionModel:CreateTexture()
-    CompanionModel.texture:Hide()
-    CompanionModel.texture:SetAllPoints()
     CompanionModel:Show()
+    CompanionModel:SetScale(2)
 end
 
 function AZP.InterfaceCompanion:OnLoadCore()
@@ -105,6 +104,21 @@ function AZP.InterfaceCompanion:OnLoadSelf()
     AZP.InterfaceCompanion:OnLoadBoth()
 end
 
+function AZP.InterfaceCompanion:GetPepeFromIndex(Index)
+    local CurPepeIndex = AZP.InterfaceCompanion.PepeInfo.Active[Index]
+    return AZP.InterfaceCompanion.PepeInfo[CurPepeIndex]
+end
+
+function AZP.InterfaceCompanion:SetValue(Index)
+    local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(Index)
+    local ModelName = CurPepe.Name
+    local ModelID = CurPepe.ModelID
+    AZPICModelIndex = ModelID
+    UIDropDownMenu_SetText(AZPICSelfOptionPanel.ModelDropDown, ModelName)
+    AZP.InterfaceCompanion:LoadModel(ModelID)
+    CloseDropDownMenus()
+end
+
 function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
     optionPanel = frameToFill
     frameToFill.LockMoveButton = CreateFrame("Button", nil, frameToFill, "UIPanelButtonTemplate")
@@ -141,6 +155,23 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
         else
             AZPICLockedAndHidden[3] = true
             frameToFill.AutoHideGroup:SetText("AutoHide Off")
+        end
+    end)
+
+    frameToFill.ModelDropDown = CreateFrame("Button", nil, frameToFill, "UIDropDownMenuTemplate")
+    frameToFill.ModelDropDown:SetPoint("TOP", -60, -150)
+
+    UIDropDownMenu_SetWidth(frameToFill.ModelDropDown, 100)
+
+    local ActivePepes = AZP.InterfaceCompanion.PepeInfo.Active
+
+    UIDropDownMenu_Initialize(frameToFill.ModelDropDown, function(self, level, menuList)
+        local info = UIDropDownMenu_CreateInfo()
+        info.func = AZP.InterfaceCompanion.SetValue
+        for i = 1, #ActivePepes do
+            info.text = AZP.InterfaceCompanion:GetPepeFromIndex(i).Name
+            info.arg1 = i
+            UIDropDownMenu_AddButton(info, 1)
         end
     end)
 
@@ -192,14 +223,12 @@ function AZP.InterfaceCompanion:LoadVariables()
         InterfaceCompanionFrame:Hide()
         optionPanel.ShowHideButton:SetText("Show Companion!")
     end
+
+    AZP.InterfaceCompanion:LoadModel(AZPICModelIndex)
 end
 
-function AZP.InterfaceCompanion:LoadModel()
-    AZP.InterfaceCompanion:DelayedExecution(5,
-        function()
-            CompanionModel:SetCreature(86470)
-        end
-    )
+function AZP.InterfaceCompanion:LoadModel(ModelID)    -- Change DelayedExecution to native WoW Function.
+    CompanionModel:SetModel(ModelID)
 end
 
 function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
@@ -294,8 +323,6 @@ function AZP.InterfaceCompanion:OnEvent(self, event, ...)
                 AZP.InterfaceCompanion:ReceiveVersion(version)
             end
         end
-    elseif event == "PLAYER_ENTERING_WORLD" then
-        AZP.InterfaceCompanion:LoadModel()
     elseif event == "VARIABLES_LOADED" then
         AZP.InterfaceCompanion.Events:VariablesLoaded()
     elseif event == "GROUP_ROSTER_UPDATE" then
