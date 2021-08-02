@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 8
+AZP.VersionControl["Interface Companion"] = 9
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
@@ -24,7 +24,6 @@ function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
-    InterfaceCompanionFrame:SetScale(1)
 
     CompanionModel = CreateFrame("PlayerModel", nil, InterfaceCompanionFrame)
     CompanionModel:Hide()
@@ -38,14 +37,13 @@ end
 
 function AZP.InterfaceCompanion:OnLoadCore()
     AZP.InterfaceCompanion:OnLoadBoth()
-
-    AZP.Core:RegisterEvents("PLAYER_ENTERING_WORLD", function(...) AZP.InterfaceCompanion:LoadModel(...) end)
     AZP.Core:RegisterEvents("VARIABLES_LOADED", function(...) AZP.InterfaceCompanion.Events:VariablesLoaded(...) end)
     AZP.Core:RegisterEvents("GROUP_ROSTER_UPDATE", function(...) AZP.InterfaceCompanion.Events:GroupRosterUpdate(...) end)
 
     AZP.OptionsPanels:RemovePanel("Interface Companion")
     AZP.OptionsPanels:Generic("Interface Companion", optionHeader, function(frame)
-        AZP.InterfaceCompanion:FillOptionsPanel(frame)
+        AZPICSelfOptionPanel = frame
+        AZP.InterfaceCompanion:FillOptionsPanel(AZPICSelfOptionPanel)
     end)
 end
 
@@ -112,10 +110,9 @@ end
 function AZP.InterfaceCompanion:SetValue(Index)
     local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(Index)
     local ModelName = CurPepe.Name
-    local ModelID = CurPepe.ModelID
-    AZPICModelIndex = ModelID
+    AZPICModelIndex = Index
     UIDropDownMenu_SetText(AZPICSelfOptionPanel.ModelDropDown, ModelName)
-    AZP.InterfaceCompanion:LoadModel(ModelID)
+    AZP.InterfaceCompanion:LoadModel(Index)
     CloseDropDownMenus()
 end
 
@@ -227,8 +224,16 @@ function AZP.InterfaceCompanion:LoadVariables()
     AZP.InterfaceCompanion:LoadModel(AZPICModelIndex)
 end
 
-function AZP.InterfaceCompanion:LoadModel(ModelID)    -- Change DelayedExecution to native WoW Function.
-    CompanionModel:SetModel(ModelID)
+function AZP.InterfaceCompanion:LoadModel(ModelIndex)
+    InterfaceCompanionFrame:Show()
+    local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
+    CompanionModel:SetModel(CurPepe.ModelID)
+    InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], AZPICCompanionFrameLocation[4], AZPICCompanionFrameLocation[5])
+    -- InterfaceCompanionFrame:SetScale(CurPepe.Scale)
+    -- local curWidth, curHeight = CompanionModel:GetWidth(), CompanionModel:GetHeight()
+    -- local xLoc = AZPICCompanionFrameLocation[4]
+    -- local yLoc = AZPICCompanionFrameLocation[5]
+    -- InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], xLoc + (curWidth * (CurPepe.Scale - 1)), yLoc - (curHeight * (CurPepe.Scale - 1)))
 end
 
 function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
@@ -295,7 +300,7 @@ function AZP.InterfaceCompanion:GetSpecificAddonVersion(versionString, addonWant
 end
 
 function AZP.InterfaceCompanion.Events:VariablesLoaded()
-    AZP.InterfaceCompanion:LoadLocation()
+    --AZP.InterfaceCompanion:LoadLocation()
     AZP.InterfaceCompanion:LoadVariables()
     AZP.InterfaceCompanion:ShareVersion()
 end
