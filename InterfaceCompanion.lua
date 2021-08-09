@@ -1,12 +1,13 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 11
+AZP.VersionControl["Interface Companion"] = 12
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
 local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
 local CompanionModel = nil
+local InterfaceCompanionScaleSlider = nil
 local EventFrame, UpdateFrame = {}, {}
 
 local AZPICSelfOptionPanel = nil
@@ -172,6 +173,23 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
         end
     end)
 
+    InterfaceCompanionScaleSlider = CreateFrame("SLIDER", "InterfaceCompanionScaleSlider", frameToFill, "OptionsSliderTemplate")
+    InterfaceCompanionScaleSlider:SetHeight(20)
+    InterfaceCompanionScaleSlider:SetWidth(500)
+    InterfaceCompanionScaleSlider:SetOrientation('HORIZONTAL')
+    InterfaceCompanionScaleSlider:SetPoint("TOP", 0, -200)
+    InterfaceCompanionScaleSlider:EnableMouse(true)
+    InterfaceCompanionScaleSlider.tooltipText = 'Scale for mana bars'
+    InterfaceCompanionScaleSliderLow:SetText('small')
+    InterfaceCompanionScaleSliderHigh:SetText('big')
+    InterfaceCompanionScaleSliderText:SetText('Scale')
+
+    InterfaceCompanionScaleSlider:Show()
+    InterfaceCompanionScaleSlider:SetMinMaxValues(1, 3)
+    InterfaceCompanionScaleSlider:SetValueStep(0.1)
+
+    InterfaceCompanionScaleSlider:SetScript("OnValueChanged", function(self, value) AZPICScale = value CompanionModel:SetScale(value) end)
+
     frameToFill:Hide()
 end
 
@@ -198,6 +216,9 @@ function AZP.InterfaceCompanion:LoadLocation()
 end
 
 function AZP.InterfaceCompanion:LoadVariables()
+    if AZPICScale == nil then AZPICScale = 2 end
+    InterfaceCompanionScaleSlider:SetValue(AZPICScale)
+
     if AZPICLockedAndHidden[1] then
         optionPanel.LockMoveButton:SetText("Move Companion!")
         InterfaceCompanionFrame:EnableMouse(false)
@@ -228,6 +249,7 @@ function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     InterfaceCompanionFrame:Show()
     local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
     CompanionModel:SetModel(CurPepe.ModelID)
+    CompanionModel:SetScale(AZPICScale)
     InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], AZPICCompanionFrameLocation[4], AZPICCompanionFrameLocation[5])
     -- InterfaceCompanionFrame:SetScale(CurPepe.Scale)
     -- local curWidth, curHeight = CompanionModel:GetWidth(), CompanionModel:GetHeight()
