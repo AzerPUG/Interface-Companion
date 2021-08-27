@@ -3,7 +3,7 @@ if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 
 AZP.InterfaceCompanion.PepeInfo =
 {
-    Active = {1, 3, 4, 5, 8, 13, 14, 15, 16},
+    Active = {1, 3, 4, 5, 6, 8, 13, 14, 15, 16},
     [1] =
     {
         Name = "Standard",
@@ -43,7 +43,7 @@ AZP.InterfaceCompanion.PepeInfo =
     {
         Name = "Witch",
         PathName = "6hu_garrison_orangebird_var_halloween.m2",
-        ModelID = 0,
+        ModelID = 1246563,
         Scale = 1,
     },
     [7] =
