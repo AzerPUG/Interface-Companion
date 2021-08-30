@@ -3,11 +3,12 @@ if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 
 AZP.InterfaceCompanion.PepeInfo =
 {
-    Active = {1, 3, 4, 5, 6, 8, 13, 14, 15, 16},
+    StandardPath = "World\\Expansion05\\doodads\\orc\\doodads\\",
+    Active = {1, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16},
     [1] =
     {
         Name = "Standard",
-        PathName = "World\\Expansion05\\doodads\\orc\\doodads\\6hu_garrison_orangebird.m2",
+        PathName = "6hu_garrison_orangebird.m2",
         ModelID = 1041861,
         Scale = 1,
     },
@@ -50,7 +51,7 @@ AZP.InterfaceCompanion.PepeInfo =
     {
         Name = "Traveler",
         PathName = "7dl_dalaran_orangebird.m2",
-        ModelID = 0,
+        ModelID = 1386540,
         Scale = 1,
     },
     [8] =
