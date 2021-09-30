@@ -4,7 +4,7 @@ if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 AZP.InterfaceCompanion.PepeInfo =
 {
     StandardPath = "World\\Expansion05\\doodads\\orc\\doodads\\",
-    Active = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16},
+    Active = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16},
     [1] =
     {
         Name = "Standard",
@@ -79,7 +79,7 @@ AZP.InterfaceCompanion.PepeInfo =
     {
         Name = "Mecha Gnome",
         PathName = "8gn_gnome_orangebird01.m2",
-        ModelID = 0,
+        ModelID = 3011956,
         Scale = 1,
 
     },
