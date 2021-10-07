@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 23
+AZP.VersionControl["Interface Companion"] = 24
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
@@ -243,6 +243,14 @@ function AZP.InterfaceCompanion:LoadVariables()
     end
 
     AZP.InterfaceCompanion:LoadModel(AZPICModelIndex)
+
+    if AZPICModelIndex ~= nil then      -- AZPICSelfOptionPanel
+        local curIndex = AZP.InterfaceCompanion.PepeInfo.Active[AZPICModelIndex]
+        local curPet = AZP.InterfaceCompanion.PepeInfo[curIndex]
+        UIDropDownMenu_SetText(optionPanel.ModelDropDown, curPet.Name)
+    else
+        UIDropDownMenu_SetText(optionPanel.ModelDropDown, "Standard Pepe")
+    end
 end
 
 function AZP.InterfaceCompanion:LoadModel(ModelIndex)
