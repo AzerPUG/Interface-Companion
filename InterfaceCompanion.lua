@@ -1,16 +1,14 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 24
+AZP.VersionControl["Interface Companion"] = 26
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
-local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
-local CompanionModel = nil
-local InterfaceCompanionScaleSlider = nil
+InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 local EventFrame, UpdateFrame = {}, {}
 
-local AZPICSelfOptionPanel = nil
+AZPICSelfOptionPanel = nil
 local optionPanel = nil
 local optionHeader = "|cFF00FFFFInterface Companion|r"
 
@@ -20,20 +18,21 @@ if AZPICCompanionFrameLocation == nil then AZPICCompanionFrameLocation = {"CENTE
 if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false} end
 if AZPICModelIndex == nil then AZPICModelIndex = 1041861 end
 
+local prevScaleFactor, prevVertOffSet = nil,  nil
+
 function AZP.InterfaceCompanion:OnLoadBoth()
-    InterfaceCompanionFrame:SetSize(250, 250)
+    InterfaceCompanionFrame:SetSize(200, 200)
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
+    InterfaceCompanionFrame:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", edgeSize = 12,})
 
-    CompanionModel = CreateFrame("PlayerModel", nil, InterfaceCompanionFrame)
-    CompanionModel:Hide()
-    CompanionModel:SetSize(200, 200)
-    CompanionModel:SetPosition(-2, 0, 0)
-    CompanionModel:SetPoint("CENTER", 0, 0)
-    CompanionModel.x, CompanionModel.y, CompanionModel.z = 0, 0, 0
-    CompanionModel:Show()
-    CompanionModel:SetScale(2)
+    InterfaceCompanionFrame.CompanionModel = CreateFrame("PlayerModel", nil, InterfaceCompanionFrame)
+    InterfaceCompanionFrame.CompanionModel:SetSize(100, 100)
+    InterfaceCompanionFrame.CompanionModel:SetPoint("CENTER", 0, 0)
+
+    InterfaceCompanionFrame.CompanionModel:MakeCurrentCameraCustom()
+    InterfaceCompanionFrame.CompanionModel:SetCameraPosition(1, 0, 0)
 end
 
 function AZP.InterfaceCompanion:OnLoadCore()
@@ -92,7 +91,7 @@ function AZP.InterfaceCompanion:OnLoadSelf()
     AZPICSelfOptionPanel.header:SetText("|cFF00FFFFAzerPUG's Interface Companion Options!|r")
 
     AZPICSelfOptionPanel.footer = AZPICSelfOptionPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    AZPICSelfOptionPanel.footer:SetPoint("TOP", 0, -300)
+    AZPICSelfOptionPanel.footer:SetPoint("TOP", 0, -500)
     AZPICSelfOptionPanel.footer:SetText(
         "|cFF00FFFFAzerPUG Links:\n" ..
         "Website: www.azerpug.com\n" ..
@@ -126,11 +125,13 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
         if InterfaceCompanionFrame:IsMovable() then
             InterfaceCompanionFrame:EnableMouse(false)
             InterfaceCompanionFrame:SetMovable(false)
+            InterfaceCompanionFrame:SetBackdropBorderColor(1, 0, 0, 0)
             frameToFill.LockMoveButton:SetText("Move Companion!")
             AZPICLockedAndHidden[1] = true
         else
             InterfaceCompanionFrame:EnableMouse(true)
             InterfaceCompanionFrame:SetMovable(true)
+            InterfaceCompanionFrame:SetBackdropBorderColor(1, 0, 0, 1)
             frameToFill.LockMoveButton:SetText("Lock Companion")
             AZPICLockedAndHidden[1] = false
         end
@@ -173,22 +174,86 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
         end
     end)
 
-    InterfaceCompanionScaleSlider = CreateFrame("SLIDER", "InterfaceCompanionScaleSlider", frameToFill, "OptionsSliderTemplate")
-    InterfaceCompanionScaleSlider:SetHeight(20)
-    InterfaceCompanionScaleSlider:SetWidth(500)
-    InterfaceCompanionScaleSlider:SetOrientation('HORIZONTAL')
-    InterfaceCompanionScaleSlider:SetPoint("TOP", 0, -200)
-    InterfaceCompanionScaleSlider:EnableMouse(true)
-    InterfaceCompanionScaleSlider.tooltipText = 'Scale for mana bars'
-    InterfaceCompanionScaleSliderLow:SetText('small')
-    InterfaceCompanionScaleSliderHigh:SetText('big')
-    InterfaceCompanionScaleSliderText:SetText('Scale')
+    frameToFill.ScaleSlider = CreateFrame("SLIDER", "ScaleSlider", frameToFill, "OptionsSliderTemplate")
+    frameToFill.ScaleSlider:SetHeight(20)
+    frameToFill.ScaleSlider:SetWidth(500)
+    frameToFill.ScaleSlider:SetOrientation("HORIZONTAL")
+    frameToFill.ScaleSlider:SetPoint("TOP", 0, -200)
+    frameToFill.ScaleSlider:EnableMouse(true)
+    frameToFill.ScaleSlider.tooltipText = "Scale for Companion Frame."
+    frameToFill.ScaleSlider:Show()
+    frameToFill.ScaleSlider:SetMinMaxValues(1, 3)
+    frameToFill.ScaleSlider:SetValueStep(0.1)
+    frameToFill.ScaleSlider:SetScript("OnValueChanged",
+        function(self, value)
+            local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(AZPICModelIndex)
+            InterfaceCompanionFrame:SetScale(value * CurPepe.ScaleFactor)
+            AZPICSettings.Scale = value
+        end)
+    ScaleSliderLow:SetText("Small")
+    ScaleSliderHigh:SetText("Big")
+    ScaleSliderText:SetText("Scale")
 
-    InterfaceCompanionScaleSlider:Show()
-    InterfaceCompanionScaleSlider:SetMinMaxValues(1, 3)
-    InterfaceCompanionScaleSlider:SetValueStep(0.1)
+    frameToFill.HorizontalSlider = CreateFrame("SLIDER", "HorizontalSlider", frameToFill, "OptionsSliderTemplate")
+    frameToFill.HorizontalSlider:SetHeight(20)
+    frameToFill.HorizontalSlider:SetWidth(500)
+    frameToFill.HorizontalSlider:SetOrientation('HORIZONTAL')
+    frameToFill.HorizontalSlider:SetPoint("TOP", frameToFill.ScaleSlider, "BOTTOM", 0, -25)
+    frameToFill.HorizontalSlider:EnableMouse(true)
+    frameToFill.HorizontalSlider.tooltipText = "Horizontal Position for Companion in Frame."
+    frameToFill.HorizontalSlider:Show()
+    frameToFill.HorizontalSlider:SetMinMaxValues(-2, 2)
+    frameToFill.HorizontalSlider:SetValueStep(0.1)
+    frameToFill.HorizontalSlider:SetScript("OnValueChanged",
+        function(self, value)
+            local Dist, HorPos, VertPos = InterfaceCompanionFrame.CompanionModel:GetPosition()
+            InterfaceCompanionFrame.CompanionModel:SetPosition(Dist, value, VertPos)
+            AZPICSettings.HorPos = value
+        end)
+    HorizontalSliderLow:SetText("Left")
+    HorizontalSliderHigh:SetText("Right")
+    HorizontalSliderText:SetText("HorPos")
 
-    InterfaceCompanionScaleSlider:SetScript("OnValueChanged", function(self, value) AZPICScale = value CompanionModel:SetScale(value) end)
+    frameToFill.VerticalSlider = CreateFrame("SLIDER", "VerticalSlider", frameToFill, "OptionsSliderTemplate")
+    frameToFill.VerticalSlider:SetHeight(20)
+    frameToFill.VerticalSlider:SetWidth(500)
+    frameToFill.VerticalSlider:SetOrientation('HORIZONTAL')
+    frameToFill.VerticalSlider:SetPoint("TOP", frameToFill.HorizontalSlider, "BOTTOM", 0, -25)
+    frameToFill.VerticalSlider:EnableMouse(true)
+    frameToFill.VerticalSlider.tooltipText = "Vertical Position for Companion in Frame."
+    frameToFill.VerticalSlider:Show()
+    frameToFill.VerticalSlider:SetMinMaxValues(-2, 2)
+    frameToFill.VerticalSlider:SetValueStep(0.1)
+    frameToFill.VerticalSlider:SetScript("OnValueChanged",
+        function(self, value)
+            local VertOffSet = AZP.InterfaceCompanion:GetPepeFromIndex(AZPICModelIndex).VertOffSet
+            local Dist, HorPos, VertPos = InterfaceCompanionFrame.CompanionModel:GetPosition()
+            InterfaceCompanionFrame.CompanionModel:SetPosition(Dist, HorPos, value + VertOffSet)
+            AZPICSettings.VertPos = value
+        end)
+    VerticalSliderLow:SetText("Bottom")
+    VerticalSliderHigh:SetText("Top")
+    VerticalSliderText:SetText("VertPos")
+
+    frameToFill.DistanceSlider = CreateFrame("SLIDER", "DistanceSlider", frameToFill, "OptionsSliderTemplate")
+    frameToFill.DistanceSlider:SetHeight(20)
+    frameToFill.DistanceSlider:SetWidth(500)
+    frameToFill.DistanceSlider:SetOrientation('HORIZONTAL')
+    frameToFill.DistanceSlider:SetPoint("TOP", frameToFill.VerticalSlider, "BOTTOM", 0, -25)
+    frameToFill.DistanceSlider:EnableMouse(true)
+    frameToFill.DistanceSlider.tooltipText = "Distance Position for Companion in Frame."
+    frameToFill.DistanceSlider:Show()
+    frameToFill.DistanceSlider:SetMinMaxValues(-5, -1)
+    frameToFill.DistanceSlider:SetValueStep(0.1)
+    frameToFill.DistanceSlider:SetScript("OnValueChanged",
+        function(self, value)
+            local Dist, HorPos, VertPos = InterfaceCompanionFrame.CompanionModel:GetPosition()
+            InterfaceCompanionFrame.CompanionModel:SetPosition(value, HorPos, VertPos)
+            AZPICSettings.Dist = value
+        end)
+    DistanceSliderLow:SetText("Front")
+    DistanceSliderHigh:SetText("Back")
+    DistanceSliderText:SetText("Distance")
 
     frameToFill:Hide()
 end
@@ -196,10 +261,13 @@ end
 function AZP.InterfaceCompanion:ShowHideFrame(optionFrame)
     if InterfaceCompanionFrame:IsShown() then
         InterfaceCompanionFrame:Hide()
+        InterfaceCompanionFrame.CompanionModel:Hide()
         optionFrame.ShowHideButton:SetText("Show Companion!")
         AZPICLockedAndHidden[2] = true
     else
         InterfaceCompanionFrame:Show()
+        InterfaceCompanionFrame.CompanionModel:Show()
+        AZP.InterfaceCompanion:LoadModel(AZPICModelIndex)
         optionFrame.ShowHideButton:SetText("Hide Companion!")
         AZPICLockedAndHidden[2] = false
     end
@@ -216,17 +284,18 @@ function AZP.InterfaceCompanion:LoadLocation()
 end
 
 function AZP.InterfaceCompanion:LoadVariables()
-    if AZPICScale == nil then AZPICScale = 2 end
-    InterfaceCompanionScaleSlider:SetValue(AZPICScale)
+    if AZPICSettings == nil then AZPICSettings = {Scale = 1, HorPos = 0, VertPos = 0, Dist = -2} end
 
     if AZPICLockedAndHidden[1] then
         optionPanel.LockMoveButton:SetText("Move Companion!")
         InterfaceCompanionFrame:EnableMouse(false)
         InterfaceCompanionFrame:SetMovable(false)
+        InterfaceCompanionFrame:SetBackdropBorderColor(1, 0, 0, 0)
     else
         optionPanel.LockMoveButton:SetText("Lock Companion!")
         InterfaceCompanionFrame:EnableMouse(true)
         InterfaceCompanionFrame:SetMovable(true)
+        InterfaceCompanionFrame:SetBackdropBorderColor(1, 0, 0, 1)
     end
 
     if AZPICLockedAndHidden[2] then
@@ -242,9 +311,10 @@ function AZP.InterfaceCompanion:LoadVariables()
         optionPanel.ShowHideButton:SetText("Show Companion!")
     end
 
+    AZP.InterfaceCompanion:LoadModelData(AZPICModelIndex)
     AZP.InterfaceCompanion:LoadModel(AZPICModelIndex)
 
-    if AZPICModelIndex ~= nil then      -- AZPICSelfOptionPanel
+    if AZPICModelIndex ~= nil then
         local curIndex = AZP.InterfaceCompanion.PepeInfo.Active[AZPICModelIndex]
         local curPet = AZP.InterfaceCompanion.PepeInfo[curIndex]
         UIDropDownMenu_SetText(optionPanel.ModelDropDown, curPet.Name)
@@ -256,14 +326,50 @@ end
 function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     InterfaceCompanionFrame:Show()
     local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
-    CompanionModel:SetModel(CurPepe.ModelID)
-    CompanionModel:SetScale(AZPICScale)
+    local ModelScale = InterfaceCompanionFrame.CompanionModel:GetScale() / prevScaleFactor * CurPepe.ScaleFactor
+    local ModelFacing = InterfaceCompanionFrame.CompanionModel:GetFacing()
+    local ModelX, ModelY, ModelZ = InterfaceCompanionFrame.CompanionModel:GetPosition()
+    ModelZ = ModelZ - prevVertOffSet + CurPepe.VertOffSet
+
+    prevScaleFactor = CurPepe.ScaleFactor
+    prevVertOffSet = CurPepe.VertOffSet
+
+    InterfaceCompanionFrame.CompanionModel:SetModel(CurPepe.ModelID)
+    InterfaceCompanionFrame.CompanionModel:MakeCurrentCameraCustom()
+
+    InterfaceCompanionFrame.CompanionModel:SetScale(ModelScale)
+    InterfaceCompanionFrame.CompanionModel:SetFacing(ModelFacing)
+    InterfaceCompanionFrame.CompanionModel:SetPosition(ModelX, ModelY, ModelZ)
+
+    local _, _, PostModelZ = InterfaceCompanionFrame.CompanionModel:GetPosition()
+    local PostModelScale = InterfaceCompanionFrame.CompanionModel:GetScale()
+
+    print("ModelVert:", PostModelZ)
+    print("ModelScale", PostModelScale)
+
+    InterfaceCompanionFrame.CompanionModel:SetCameraTarget(0, 0, 0)
+    InterfaceCompanionFrame.CompanionModel:SetCameraFacing(0)
+    InterfaceCompanionFrame.CompanionModel:SetCameraDistance(1)
+    InterfaceCompanionFrame.CompanionModel:SetCameraPosition(1, 0, 0)
+end
+
+function AZP.InterfaceCompanion:LoadModelData(ModelIndex)
+    local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
+    prevScaleFactor = CurPepe.ScaleFactor
+    prevVertOffSet = CurPepe.VertOffSet
+    DevTools_Dump(AZPICSettings)        -- 2, 0, 0, -3
+    --InterfaceCompanionFrame.CompanionModel:SetPosition(AZPICSettings.Dist, AZPICSettings.HorPos, AZPICSettings.VertPos + CurPepe.VertOffSet)
+
+    --print("LoadModelPosition:", InterfaceCompanionFrame.CompanionModel:GetPosition())
+    --InterfaceCompanionFrame.CompanionModel:SetScale(AZPICSettings.Scale * CurPepe.ScaleFactor)
     InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], AZPICCompanionFrameLocation[4], AZPICCompanionFrameLocation[5])
-    -- InterfaceCompanionFrame:SetScale(CurPepe.Scale)
-    -- local curWidth, curHeight = CompanionModel:GetWidth(), CompanionModel:GetHeight()
-    -- local xLoc = AZPICCompanionFrameLocation[4]
-    -- local yLoc = AZPICCompanionFrameLocation[5]
-    -- InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], xLoc + (curWidth * (CurPepe.Scale - 1)), yLoc - (curHeight * (CurPepe.Scale - 1)))
+
+    AZPICSelfOptionPanel.HorizontalSlider:SetValue(AZPICSettings.HorPos)
+    AZPICSelfOptionPanel.VerticalSlider:SetValue(AZPICSettings.VertPos)
+    AZPICSelfOptionPanel.DistanceSlider:SetValue(AZPICSettings.Dist)
+    AZPICSelfOptionPanel.ScaleSlider:SetValue(AZPICSettings.Scale)
+
+    DevTools_Dump(AZPICSettings)        -- 2, 0, 0, -3
 end
 
 function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)

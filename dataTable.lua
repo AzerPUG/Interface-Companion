@@ -10,77 +10,88 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Standard Pepe",
         PathName = "6hu_garrison_orangebird.m2",
         ModelID = 1041861,
-        Scale = 1,
+        ScaleFactor = 1,
+        VertOffSet = 0,
     },
     [2] =
     {
         Name = "Knight Pepe",
         PathName = "6hu_garrison_orangebird_var1.m2",
         ModelID = 1131783,
-        Scale = 1.5,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [3] =
     {
         Name = "Pirate Pepe",
         PathName = "6hu_garrison_orangebird_var2.m2",
         ModelID = 1131795,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [4] =
     {
         Name = "Ninja Pepe",
         PathName = "6hu_garrison_orangebird_var3.m2",
         ModelID = 1131797,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [5] =
     {
         Name = "Viking Pepe",
         PathName = "6hu_garrison_orangebird_var4.m2",
         ModelID = 1131798,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [6] =
     {
         Name = "Witch Pepe",
         PathName = "6hu_garrison_orangebird_var_halloween.m2",
         ModelID = 1246563,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [7] =
     {
         Name = "Traveler Pepe",
         PathName = "7dl_dalaran_orangebird.m2",
         ModelID = 1386540,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [8] =
     {
         Name = "Demon Hunter Pepe",
         PathName = "6hu_garrison_orangebird_var5.m2",
         ModelID = 1534076,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [9] =
     {
         Name = "Kul Tiran Pepe",
         PathName = "8hu_kultiras_orangebird01.m2",
         ModelID = 1859375,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [10] =
     {
         Name = "Zan'Dalari Pepe",
         PathName = "8tr_zandalari_orangebird01.m2",
         ModelID = 1861550,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
     },
     [11] =
     {
         Name = "Mecha Gnome Pepe",
         PathName = "8gn_gnome_orangebird01.m2",
         ModelID = 3011956,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
 
     },
     [12] =
@@ -88,7 +99,8 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Santa Pepe",
         PathName = "8xp_holiday_orangebird01.m2",
         ModelID = 3209343,
-        Scale = 1,
+        ScaleFactor = 1.65,
+        VertOffSet = 0,
 
     },
     [13] =
@@ -96,7 +108,8 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Necro Lord Pepe",
         PathName = "9xp_covenant_orangebird01.m2",
         ModelID = 3855982,
-        Scale = 1,
+        ScaleFactor = 1,
+        VertOffSet = 0,
 
     },
     [14] =
@@ -104,7 +117,8 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Kyrian Pepe",
         PathName = "9xp_covenant_orangebird02.m2",
         ModelID = 3866273,
-        Scale = 1,
+        ScaleFactor = 1,
+        VertOffSet = 0,
 
     },
     [15] =
@@ -112,7 +126,8 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Venthyr Pepe",
         PathName = "9xp_covenant_orangebird03.m2",
         ModelID = 3866274,
-        Scale = 1,
+        ScaleFactor = 1,
+        VertOffSet = 0,
 
     },
     [16] =
@@ -120,7 +135,8 @@ AZP.InterfaceCompanion.PepeInfo =
         Name = "Night Fae Pepe",
         PathName = "9xp_covenant_orangebird04.m2",
         ModelID = 3866275,
-        Scale = 1,
+        ScaleFactor = 1,
+        VertOffSet = 0,
     },
 
 }
