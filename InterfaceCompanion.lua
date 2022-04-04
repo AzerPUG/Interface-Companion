@@ -1,11 +1,11 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 26
+AZP.VersionControl["Interface Companion"] = 27
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
-local InterfaceCompanionFrame = CreateFrame("Frame", nil, UIParent)
+local InterfaceCompanionFrame = CreateFrame("FRAME", nil, UIParent)
 local CompanionModel = nil
 local InterfaceCompanionScaleSlider = nil
 local EventFrame, UpdateFrame = {}, {}
@@ -26,7 +26,15 @@ function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
 
+    -- local creatureDisplayID, descriptionText, sourceText, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(449);
+    -- CompanionModel = InterfaceCompanionFrame:CreateActor()
+    -- InterfaceCompanionFrame:TransitionToModelSceneID(modelSceneID, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_MAINTAIN, true) -- forceSceneChange
+    
+    -- InterfaceCompanionFrame:GetActorByTag("unwrapped")
+    -- local actor = InterfaceCompanionFrame:GetActorByTag("unwrapped")
+
     CompanionModel = CreateFrame("PlayerModel", nil, InterfaceCompanionFrame)
+    --CompanionModel:SetModelByCreatureDisplayID(41711)
     CompanionModel:Hide()
     CompanionModel:SetSize(200, 200)
     CompanionModel:SetPosition(-2, 0, 0)
@@ -255,15 +263,11 @@ end
 
 function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     InterfaceCompanionFrame:Show()
-    local CurPepe = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
-    CompanionModel:SetModel(CurPepe.ModelID)
+    local CurModel = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
+    if CurModel.ModelID ~= nil then CompanionModel:SetModel(CurModel.ModelID)
+    else CompanionModel:SetCreature(CurModel.CreatureID) end
     CompanionModel:SetScale(AZPICScale)
     InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], AZPICCompanionFrameLocation[4], AZPICCompanionFrameLocation[5])
-    -- InterfaceCompanionFrame:SetScale(CurPepe.Scale)
-    -- local curWidth, curHeight = CompanionModel:GetWidth(), CompanionModel:GetHeight()
-    -- local xLoc = AZPICCompanionFrameLocation[4]
-    -- local yLoc = AZPICCompanionFrameLocation[5]
-    -- InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], xLoc + (curWidth * (CurPepe.Scale - 1)), yLoc - (curHeight * (CurPepe.Scale - 1)))
 end
 
 function AZP.InterfaceCompanion:DelayedExecution(delayTime, delayedFunction)
