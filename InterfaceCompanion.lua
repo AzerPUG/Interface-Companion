@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 27
+AZP.VersionControl["Interface Companion"] = 28
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
@@ -21,7 +21,7 @@ if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false}
 if AZPICModelIndex == nil then AZPICModelIndex = 1041861 end
 
 function AZP.InterfaceCompanion:OnLoadBoth()
-    InterfaceCompanionFrame:SetSize(250, 250)
+    InterfaceCompanionFrame:SetSize(500, 500)
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
@@ -29,7 +29,7 @@ function AZP.InterfaceCompanion:OnLoadBoth()
     -- local creatureDisplayID, descriptionText, sourceText, isSelfMount, _, modelSceneID, animID, spellVisualKitID, disablePlayerMountPreview = C_MountJournal.GetMountInfoExtraByID(449);
     -- CompanionModel = InterfaceCompanionFrame:CreateActor()
     -- InterfaceCompanionFrame:TransitionToModelSceneID(modelSceneID, CAMERA_TRANSITION_TYPE_IMMEDIATE, CAMERA_MODIFICATION_TYPE_MAINTAIN, true) -- forceSceneChange
-    
+
     -- InterfaceCompanionFrame:GetActorByTag("unwrapped")
     -- local actor = InterfaceCompanionFrame:GetActorByTag("unwrapped")
 
