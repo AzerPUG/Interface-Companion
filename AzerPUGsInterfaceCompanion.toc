@@ -4,7 +4,7 @@
 ## OptionalDeps: AzerPUGsCore
 ## Notes: Let's be friends! I want to be with you while you play :D
 ## Version: SL 9.1 (For actual addon version, check InterfaceCompanion.lua)
-## SavedVariables: AZPICCompanionFrameLocation AZPICLockedAndHidden AZPICModelIndex AZPICScale
+## SavedVariables: AZPICCompanionFrameLocation AZPICLockedAndHidden AZPICModelIndex AZPICScale AZPICRotation
 
 dataTable.lua
 SlashCommands.lua

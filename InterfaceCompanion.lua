@@ -21,7 +21,7 @@ if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false}
 if AZPICModelIndex == nil then AZPICModelIndex = 1041861 end
 
 function AZP.InterfaceCompanion:OnLoadBoth()
-    InterfaceCompanionFrame:SetSize(500, 500)
+    InterfaceCompanionFrame:SetSize(200, 200)
     InterfaceCompanionFrame:RegisterForDrag("LeftButton")
     InterfaceCompanionFrame:SetScript("OnDragStart", InterfaceCompanionFrame.StartMoving)
     InterfaceCompanionFrame:SetScript("OnDragStop", function() InterfaceCompanionFrame:StopMovingOrSizing() AZP.InterfaceCompanion:SaveLocation() end)
@@ -41,7 +41,7 @@ function AZP.InterfaceCompanion:OnLoadBoth()
     CompanionModel:SetPoint("CENTER", 0, 0)
     CompanionModel.x, CompanionModel.y, CompanionModel.z = 0, 0, 0
     CompanionModel:Show()
-    CompanionModel:SetScale(2)
+    CompanionModel:SetScale(1)
 end
 
 function AZP.InterfaceCompanion:OnLoadCore()
@@ -196,7 +196,33 @@ function AZP.InterfaceCompanion:FillOptionsPanel(frameToFill)
     InterfaceCompanionScaleSlider:SetMinMaxValues(1, 3)
     InterfaceCompanionScaleSlider:SetValueStep(0.1)
 
-    InterfaceCompanionScaleSlider:SetScript("OnValueChanged", function(self, value) AZPICScale = value CompanionModel:SetScale(value) end)
+    InterfaceCompanionScaleSlider:SetScript("OnValueChanged",
+    function(self, value)
+        AZPICScale = value
+        InterfaceCompanionFrame:SetScale(value)
+        CompanionModel:SetModelScale(1 / value)
+    end)
+
+    InterfaceCompanionRotationSlider = CreateFrame("SLIDER", "InterfaceCompanionRotationSlider", frameToFill, "OptionsSliderTemplate")
+    InterfaceCompanionRotationSlider:SetHeight(20)
+    InterfaceCompanionRotationSlider:SetWidth(500)
+    InterfaceCompanionRotationSlider:SetOrientation('HORIZONTAL')
+    InterfaceCompanionRotationSlider:SetPoint("TOP", 0, -250)
+    InterfaceCompanionRotationSlider:EnableMouse(true)
+    InterfaceCompanionRotationSlider.tooltipText = 'Rotate companion'
+    InterfaceCompanionRotationSliderLow:SetText('small')
+    InterfaceCompanionRotationSliderHigh:SetText('big')
+    InterfaceCompanionRotationSliderText:SetText('Rotate')
+
+    InterfaceCompanionRotationSlider:Show()
+    InterfaceCompanionRotationSlider:SetMinMaxValues(math.pi, 3 * math.pi)
+    InterfaceCompanionRotationSlider:SetValueStep(0.1)
+
+    InterfaceCompanionRotationSlider:SetScript("OnValueChanged",
+    function(self, value)
+        AZPICRotation = value
+        CompanionModel:SetRotation(value)
+    end)
 
     frameToFill:Hide()
 end
@@ -226,6 +252,7 @@ end
 function AZP.InterfaceCompanion:LoadVariables()
     if AZPICScale == nil then AZPICScale = 2 end
     InterfaceCompanionScaleSlider:SetValue(AZPICScale)
+    InterfaceCompanionRotationSlider:SetValue(AZPICRotation)
 
     if AZPICLockedAndHidden[1] then
         optionPanel.LockMoveButton:SetText("Move Companion!")
@@ -266,7 +293,12 @@ function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     local CurModel = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
     if CurModel.ModelID ~= nil then CompanionModel:SetModel(CurModel.ModelID)
     else CompanionModel:SetCreature(CurModel.CreatureID) end
-    CompanionModel:SetScale(AZPICScale)
+    InterfaceCompanionFrame:SetScale(AZPICScale)
+    CompanionModel:SetModelScale(1 / AZPICScale)
+
+    if AZPICRotation == nil then AZPICRotation = 0 end
+    CompanionModel:SetRotation(AZPICRotation)
+
     InterfaceCompanionFrame:SetPoint(AZPICCompanionFrameLocation[1], AZPICCompanionFrameLocation[4], AZPICCompanionFrameLocation[5])
 end
 
