@@ -4,7 +4,7 @@ if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 AZP.InterfaceCompanion.PepeInfo =
 {
     StandardPath = "World\\Expansion05\\doodads\\orc\\doodads\\",
-    Active = {17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22},
+    Active = {17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23},
      [1] = {Name =     "Standard Pepe",    ModelID = 1041861,},
      [2] = {Name =       "Knight Pepe",    ModelID = 1131783,},
      [3] = {Name =       "Pirate Pepe",    ModelID = 1131795,},
@@ -27,4 +27,5 @@ AZP.InterfaceCompanion.PepeInfo =
     [20] = {Name =      "Baby Winston", CreatureID =  103159,},
     [21] = {Name =          "Mischief", CreatureID =  113527,},
     [22] = {Name =            "Tottle", CreatureID =  129049,},
+    [23] = {Name =           "Ash'Ana", CreatureID =   17254,},
 }
