@@ -295,7 +295,6 @@ function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     InterfaceCompanionFrame:Show()
     local CurModel = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
     if CurModel == nil then CurModel = AZP.InterfaceCompanion.PepeInfo[1] end
-    DevTools_Dump(CurModel)
     if CurModel.ModelID ~= nil then CompanionModel:SetModel(CurModel.ModelID)
     else CompanionModel:SetCreature(CurModel.CreatureID) end
     InterfaceCompanionFrame:SetScale(AZPICScale)
