@@ -1,7 +1,7 @@
 if AZP == nil then AZP = {} end
 if AZP.VersionControl == nil then AZP.VersionControl = {} end
 
-AZP.VersionControl["Interface Companion"] = 34
+AZP.VersionControl["Interface Companion"] = 35
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 if AZP.InterfaceCompanion.Events == nil then AZP.InterfaceCompanion.Events = {} end
 
@@ -18,7 +18,7 @@ local HaveShowedUpdateNotification = false
 
 if AZPICCompanionFrameLocation == nil then AZPICCompanionFrameLocation = {"CENTER", 0, 0} end
 if AZPICLockedAndHidden == nil then AZPICLockedAndHidden = {false, false, false} end
-if AZPICModelIndex == nil then AZPICModelIndex = 1041861 end
+if AZPICModelIndex == nil then AZPICModelIndex = 3 end
 
 function AZP.InterfaceCompanion:OnLoadBoth()
     InterfaceCompanionFrame:SetSize(200, 200)
@@ -250,7 +250,10 @@ function AZP.InterfaceCompanion:LoadLocation()
 end
 
 function AZP.InterfaceCompanion:LoadVariables()
-    if AZPICScale == nil then AZPICScale = 2 end
+    if AZPICModelIndex == nil then AZPICModelIndex = 3 end
+    if AZPICRotation == nil then AZPICRotation = math.pi * 2 end
+    if AZPICScale == nil then AZPICScale = 3 end
+
     InterfaceCompanionScaleSlider:SetValue(AZPICScale)
     InterfaceCompanionRotationSlider:SetValue(AZPICRotation)
 
@@ -291,6 +294,8 @@ end
 function AZP.InterfaceCompanion:LoadModel(ModelIndex)
     InterfaceCompanionFrame:Show()
     local CurModel = AZP.InterfaceCompanion:GetPepeFromIndex(ModelIndex)
+    if CurModel == nil then CurModel = AZP.InterfaceCompanion.PepeInfo[1] end
+    DevTools_Dump(CurModel)
     if CurModel.ModelID ~= nil then CompanionModel:SetModel(CurModel.ModelID)
     else CompanionModel:SetCreature(CurModel.CreatureID) end
     InterfaceCompanionFrame:SetScale(AZPICScale)
