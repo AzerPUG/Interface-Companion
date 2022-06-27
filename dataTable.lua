@@ -36,5 +36,5 @@ AZP.InterfaceCompanion.PepeInfo =
     [29] = {Name =      "Elekk Plushie", CreatureID =   82464,},
     [30] = {Name =      "Ghostly Skull", CreatureID =   29147,},
     [31] = {Name = "Kirin Tor Familiar", CreatureID =   32643,},
-    [32] = {Name =             "Tottle", CreatureID =  129049,},
+    [32] = {Name =        "Murkstrasza", CreatureID =  181535,},
 }
