@@ -1,10 +1,20 @@
 if AZP == nil then AZP = {} end
 if AZP.InterfaceCompanion == nil then AZP.InterfaceCompanion = {} end
 
+--[[
+
+    Mounts:
+        - Load by ModelID.
+        - WoW Tools >> Mount >> Name_lang: Name.
+            - Click ID >> View MountXDisplay.
+            - Click Creature Display Info >> Model ID >> Use File Data ID.
+
+]]
+
 AZP.InterfaceCompanion.PepeInfo =
 {
     StandardPath = "World\\Expansion05\\doodads\\orc\\doodads\\",
-    Active = {17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35},
+    Active = {17, 18, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 36},
      [1] = {Name =      "Standard Pepe",    ModelID = 1041861,},
      [2] = {Name =        "Knight Pepe",    ModelID = 1131783,},
      [3] = {Name =        "Pirate Pepe",    ModelID = 1131795,},
@@ -40,4 +50,5 @@ AZP.InterfaceCompanion.PepeInfo =
     [33] = {Name =             "Drakks", CreatureID =  181575,},
     [34] = {Name =           "Murkidan", CreatureID =   85009,},
     [35] = {Name =              "Lurky", CreatureID =   15358,},
+    [36] = {Name =           "SlimeCat",    ModelID = 4215863,},
 }
